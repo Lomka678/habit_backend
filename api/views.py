@@ -3,6 +3,7 @@ from .models import Habit, HabitCompletion, Plan # <--- Добавили Plan
 from .serializers import HabitSerializer, HabitCompletionSerializer, PlanSerializer # <--- И его сериализатор
 from django.views.decorators.csrf import csrf_exempt
 import google.generativeai as genai
+import os
 from rest_framework import viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -14,6 +15,13 @@ from google.auth.transport import requests as google_requests
 
 from .models import Habit, HabitCompletion
 from .serializers import HabitSerializer, HabitCompletionSerializer
+
+
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    raise ValueError("Ключ ИИ не найден! Проверьте файл .env")
+
+genai.configure(api_key=api_key)
 
 # Твой ID клиента (проверь его в консоли Google)
 GOOGLE_CLIENT_ID = "731005291149-g6g1mhln5p3hn90e83ea8tks965efm55.apps.googleusercontent.com"
